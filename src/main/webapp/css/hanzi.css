@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2014.
+ * haojunhua
+ */
+
+#hanzi-banner {
+	height: 50px;
+	width: 100%;
+	background-color: green;
+	display: -webkit-box;
+	display: -moz-box;
+}
+
+#hanzi-banner #logo {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+}
+
+#hanzi-banner #download {
+	color: white;
+	font-size: 18px;
+	font-weight: 600;
+	padding: 15px 10px 0px 0px;
+}
+
+#hanzi-list {
+	float: left;
+}
+
+#hanzi-list ul {
+	float: left;
+	margin: 5px 5px;
+}
+
+#hanzi-list li {
+	float: left;
+	width: 50px;
+	font-size: 25px;
+	font-weight: 600;
+	border: 1px solid #666;
+	border-radius: 25px;
+	-webkit-border-radius: 25px;
+	text-align: center;
+	padding: 10px 0px 10px 0px;
+	border: 1px solid #666;
+	text-align: center;
+	padding: 10px 0px 10px 0px;
+	margin: 5px;
+}
+
+#hanzi-list .touched {
+	border-color: #green;
+	background-color: green;
+	color: white;
+}
+
+#loading {
+	clear: both;
+	height: 50px;
+	width: 50px;
+	margin: 0 auto;
+	font-size: 15px;
+	font-weight: bold;
+}

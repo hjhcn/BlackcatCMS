@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2014.
+  ~ haojunhua
+  -->
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.i18n.encoding" value="utf-8" />
+    <constant name="struts.multipart.saveDir" value="/tmp" />
+    <constant name="struts.multipart.maxSize" value="102400000" />
+
+    <package name="page" extends="struts-default" namespace="/">
+        <action name="*_*" class="{1}Action" method="{2}">
+            <result name="success">
+                {1}/{2}.jsp
+            </result>
+        </action>
+    </package>
+
+    <package name="api" extends="json-default" namespace="/api/json">
+        <interceptors>
+            <interceptor name="apiAuth" class="apiInterceptor" />
+            <interceptor-stack name="apiAuthStack">
+                <interceptor-ref name="apiAuth" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="apiAuthStack" />
+        <global-results>
+            <result name="error" type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    feedback
+                </param>
+            </result>
+        </global-results>
+        <action name="*_*_*" class="{1}ApiAction" method="{2}">
+            <result name="success" type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    feedback,
+                    {3}.*
+                </param>
+            </result>
+        </action>
+
+    </package>
+
+    <package name="json" extends="json-default" namespace="/json">
+        <action name="*_*_*" class="{1}Action" method="{2}">
+            <result name="success" type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    feedback,
+                    {3}.*
+                </param>
+                <param name="excludeProperties">
+                    hanzis.rows\[\d+\]\.contour,
+                    hanzis.rows\[\d+\]\.locus,
+                    hanzis.rows\[\d+\]\.ciyus,
+                    hanzis.rows\[\d+\]\.admin,
+                    hanzis.rows\[\d+\]\.info,
+                    hanzi.ciyus,
+                    hanzis
+                </param>
+            </result>
+        </action>
+    </package>
+
+    <package name="admin" extends="struts-default" namespace="/admin">
+        <interceptors>
+            <interceptor name="adminAuth" class="adminInterceptor" />
+            <interceptor-stack name="adminAuthStack">
+                <interceptor-ref name="adminAuth" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="adminAuthStack" />
+        <global-results>
+            <result name="error">login.jsp</result>
+        </global-results>
+        <action name="index" class="adminAdminAction">
+            <result name="success">index.jsp</result>
+        </action>
+        <action name="login" class="adminAdminAction" method="login">
+            <result name="success" type="redirectAction">index</result>
+            <result name="login">login.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>
+        <action name="logout" class="adminAdminAction" method="logout">
+            <result name="success">login.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>
+        <action name="*_*_page" class="{1}AdminAction">
+            <result name="success">
+                {1}/{2}.jsp
+            </result>
+        </action>
+        <action name="*_*" class="{1}AdminAction" method="{2}">
+            <result name="success">
+                {1}/{2}.jsp
+            </result>
+        </action>
+    </package>
+
+    <package name="adminJson" extends="json-default" namespace="/admin/json">
+        <interceptors>
+            <interceptor name="adminAuth" class="adminInterceptor" />
+            <interceptor-stack name="adminAuthStack">
+                <interceptor-ref name="adminAuth" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="adminAuthStack" />
+        <global-results>
+            <result name="error" type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    feedback
+                </param>
+            </result>
+        </global-results>
+        <action name="*_*_*" class="{1}AdminAction" method="{2}">
+            <result name="success" type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    feedback,
+                    {3}.*
+                </param>
+                <param name="excludeProperties">
+                    hanzis.rows\[\d+\]\.contour,
+                    hanzis.rows\[\d+\]\.locus
+                </param>
+            </result>
+        </action>
+    </package>
+</struts>

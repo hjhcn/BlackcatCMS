@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver">
+        </property>
+        <property name="url"
+                  value="jdbc:mysql://127.0.0.1/blackcat?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true">
+        </property>
+        <property name="username" value="root"/>
+        <property name="password" value="morningtel"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="500"/>
+        <property name="defaultAutoCommit" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="3600000"/>
+        <property name="minEvictableIdleTimeMillis" value="18000000"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    blackcat.orm.MySQLServerDialect
+                </prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>Ciyu.hbm.xml</value>
+                <value>Hanzi.hbm.xml</value>
+                <value>Admin.hbm.xml</value>
+                <value>UploadFile.hbm.xml</value>
+                <value>Ranking.hbm.xml</value>
+                <value>Zuciju.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="baseDao" class="blackcat.dao.impl.BaseDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="adminDao" class="blackcat.dao.impl.AdminDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="uploadFileDao" class="blackcat.dao.impl.UploadFileDaoImpl"
+          >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="hanziDao" class="blackcat.dao.impl.HanziDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="ciyuDao" class="blackcat.dao.impl.CiyuDaoImpl" >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="rankingDao" class="blackcat.dao.impl.RankingDaoImpl"
+          >
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="adminService" class="blackcat.service.impl.AdminServiceImpl"
+          >
+        <property name="adminDao" ref="adminDao" />
+        <property name="hanziService" ref="hanziService" />
+        <property name="ciyuService" ref="ciyuService" />
+    </bean>
+    <bean id="uploadFileService" class="blackcat.service.impl.UploadFileServiceImpl"
+          >
+        <property name="uploadFileDao" ref="uploadFileDao" />
+        <property name="adminService" ref="adminService" />
+    </bean>
+    <bean id="hanziService" class="blackcat.service.impl.HanziServiceImpl"
+          >
+        <property name="hanziDao" ref="hanziDao" />
+        <property name="uploadFileService" ref="uploadFileService" />
+    </bean>
+    <bean id="ciyuService" class="blackcat.service.impl.CiyuServiceImpl"
+          >
+        <property name="ciyuDao" ref="ciyuDao" />
+        <property name="uploadFileService" ref="uploadFileService" />
+    </bean>
+    <bean id="rankingService" class="blackcat.service.impl.RankingServiceImpl"
+          >
+        <property name="rankingDao" ref="rankingDao" />
+    </bean>
+
+    <bean id="adminAdminAction" class="blackcat.action.admin.AdminAdminAction"
+          scope="prototype">
+        <property name="adminService" ref="adminService" />
+    </bean>
+    <bean id="uploadAdminAction" class="blackcat.action.admin.UploadAdminAction"
+          scope="prototype">
+        <property name="uploadFileService" ref="uploadFileService" />
+    </bean>
+    <bean id="hanziAdminAction" class="blackcat.action.admin.HanziAdminAction"
+          scope="prototype">
+        <property name="hanziService" ref="hanziService" />
+    </bean>
+    <bean id="ciyuAdminAction" class="blackcat.action.admin.CiyuAdminAction"
+          scope="prototype">
+        <property name="ciyuService" ref="ciyuService" />
+    </bean>
+
+
+    <bean id="hanziAction" class="blackcat.action.HanziAction" scope="prototype">
+        <property name="hanziService" ref="hanziService" />
+        <property name="ciyuService" ref="ciyuService" />
+    </bean>
+
+    <bean id="userApiAction" class="blackcat.action.api.UserApiAction"
+          scope="prototype">
+        <property name="rankingService" ref="rankingService" />
+    </bean>
+
+    <bean id="adminInterceptor" class="blackcat.interceptor.AdminInterceptor"
+          scope="prototype" />
+    <bean id="apiInterceptor" class="blackcat.interceptor.ApiInterceptor"
+          scope="prototype">
+    </bean>
+</beans>

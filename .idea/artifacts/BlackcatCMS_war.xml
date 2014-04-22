@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="BlackcatCMS:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="TestMaven.war">
+      <element id="artifact" artifact-name="BlackcatCMS:war exploded" />
+    </root>
+  </artifact>
+</component>
